@@ -38,7 +38,7 @@ def login_request(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['psw']
-        user = authenticate(username = username, password = password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             return render(request, 'djangoapp/index.html', context)
@@ -51,8 +51,11 @@ def login_request(request):
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
+    context = {}
+    print("user `{}` logged out successfully".format(request.user.username))
+    context['message'] = "user logged out"
     logout(request)
-    return render(request, 'djangoapp/registration.html', context)
+    return render(request, 'djangoapp/index.html', context)
 # ...
 
 # Create a `registration_request` view to handle sign up request
