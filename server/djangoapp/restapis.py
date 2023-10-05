@@ -50,14 +50,14 @@ def post_request(url, json_payload, **kwargs):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a CarDealer object list
 
-def get_dealers_from_cf(url):
+def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
     json_result = get_request(url)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
-        print("Dealers: ", json_result)
+        print("Dealers: " + str(json_result))
         # For each dealer object
         for dealer in dealers:
             # Get its content in `doc` object
@@ -71,13 +71,30 @@ def get_dealers_from_cf(url):
 
     return results
 
-
-
+def get_dealer_by_id_from_cf(url, dealerId):
+    json_result=get_request(url, id=dealerId)
+    print(json_result)
+    if json_result:
+        dealer = json_result[0]
+        dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"], id=dealer["id"], lat=dealer["lat"], long=dealer["long"], short_name=dealer["short_name"], st=dealer["st"], zip=dealer["zip"])
+                                
+    return dealer_obj
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+
+def get_dealer_reviews_from_cf(url, dealerId):
+    results = []
+    json_result=get_request(url, id=dealerId)
+    print(json_result) 
+    if json_result:
+        reviews = json_result["data"]["docs"]
+        for review in reviews:
+            review_obj = DealerReview(dealership=review['dealership'], purchase=review['purchase'], purchase_date=review['purchase_date'], name=review['name'], review=review['review'], car_make=review['car_make'], car_model=review['car_model'], car_year=review['car_year'], id=review['id'] )
+            results.append(review_obj)
+    return results
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
