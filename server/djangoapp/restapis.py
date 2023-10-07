@@ -107,8 +107,34 @@ def get_dealer_reviews_from_cf(url, dealerId):
     if json_result:
         reviews = json_result["data"]["docs"]
         for review in reviews:
-            review_obj = DealerReview(dealership=review['dealership'], purchase=review['purchase'], purchase_date=review['purchase_date'], name=review['name'], review=review['review'], car_make=review['car_make'], car_model=review['car_model'], car_year=review['car_year'], id=review['id'], sentiment=analyze_review_sentiments(review["review"]))
+            if review['purchase']:
+                review_obj = DealerReview(
+                    dealership=review['dealership'], 
+                    purchase=review['purchase'], 
+                    purchase_date=review['purchase_date'], 
+                    name=review['name'], 
+                    review=review['review'], 
+                    car_make=review['car_make'], 
+                    car_model=review['car_model'], 
+                    car_year=review['car_year'], 
+                    id=review['id'], 
+                    sentiment = 'sentiment')
+            else:
+                review_obj = DealerReview(
+                    dealership=review['dealership'], 
+                    purchase=review['purchase'], 
+                    purchase_date=None, 
+                    name=review['name'], 
+                    review=review['review'], 
+                    car_make=None, 
+                    car_model=None, 
+                    car_year=None, 
+                    id=review['id'], 
+                    sentiment = 'sentiment')
+            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
+            print("Sentiments: ", review_obj.sentiment)
+            print("Results: ", results)
     return results  
 
 
@@ -127,7 +153,6 @@ def analyze_review_sentiments(review):
     label=json.dumps(response, indent=2) 
     label = response['sentiment']['document']['label'] 
     return(label) 
-    
     
 
 
