@@ -47,18 +47,42 @@
                   </div>
                   <div class="col-auto">
                     
-                    <button type="submit" class="btn btn-primary mb-3">signup</button>
+                    <!-- <button type="submit"  class="btn btn-primary mb-3"> signup</button> -->
+                    <a class="btn btn-link" href="{% url 'djangoapp:register' %}">Sign Up</a>
                   </div>
               </form>
           </li>
           {% endif %}
         </ul>
-           
-         
-        
-      </nav>
-
+    </nav>
+ 
     <!--Add a dealer table here -->
+    <h3 class='mt-2 mb-4'>Dealerships</h3>
+    <table class= "table" id="table"data-filter-control="true" >
+        <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="full_name">Dealer Name</th>
+                <th data-field="city">City</th>
+                <th data-field="address">Address</th>
+                <th data-field="zip">Zip</th>
+                <th data-field="state" data-filter-control="select">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dealer in dealerships_list %}
+            <tr>
+                <td>{{dealer.id}}</td>
+                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                <td>{{dealer.address}}</td>
+                <td>{{dealer.city}}</td>
+                <td>{{dealer.st}}</td>
+                <td>{{dealer.zip}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
@@ -66,3 +90,6 @@
     </body>
 
 </html>
+
+
+
