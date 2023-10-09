@@ -91,7 +91,7 @@ def get_dealers_from_cf(url, **kwargs):
 
 def get_dealer_by_id_from_cf(url, dealerId):
     json_result=get_request(url, id=dealerId)
-    print(json_result)
+    print("JSON: ", json_result)
     if json_result:
         dealer = json_result[0]
         dealer_obj = CarDealer(
@@ -105,6 +105,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
             st=dealer["st"], 
             zip=dealer["zip"])
         return dealer_obj
+        print("D_OBJ :", dealer_obj)
     else:
         print('Some error occurred')  
                                   
@@ -149,7 +150,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
             review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
             print("Sentiments: ", review_obj.sentiment)
-            print("Results: ", results)
+            print("Results: ", review_obj)
     return results  
 
 
