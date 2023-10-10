@@ -118,17 +118,16 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealer_details(request, dealerId):
+def get_dealer_details(request, id):
     if request.method == "GET":
         dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, dealerId=dealerId)
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         print("DEALER: ", dealer.address)
         context = {}
         context['dealer'] = dealer
 
         reviews_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-review"
-        reviews_list = get_dealer_reviews_from_cf(reviews_url, dealerId=dealerId)
-        context = {}
+        reviews_list = get_dealer_reviews_from_cf(reviews_url, id=id)
         context['reviews_list'] = reviews_list
         return render(request, 'djangoapp/dealer_details.html', {'dealer': dealer, 'reviews_list': reviews_list})
         
@@ -138,16 +137,18 @@ def get_dealer_details(request, dealerId):
 # def add_review(request, dealer_id):
 # ...
 
-def add_review(request, dealerId):
+def add_review(request, id):
     if request.method == 'GET':
         context = {}
         dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, dealerId=dealerId)
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context['dealer'] = dealer
 
         cars = CarModel.objects.all()
         print("CARS: ", cars)
         context['cars'] = cars
+
+        return render(request, 'djangoapp/add_review.html', context)
 
     elif request.method == 'POST':
         if request.user.is_authenticated:
@@ -172,8 +173,8 @@ def add_review(request, dealerId):
             payload = {}
             payload['review'] = user_review
             review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/post-review"
-            post_request(review_post_url, payload, kwargs=dealerId)
-            return redirect('djangoapp:dealer_details', kwargs=dealerId )
+            post_request(review_post_url, payload, id=id)
+            return redirect('djangoapp:dealer_details', id=id )
 
 
 
