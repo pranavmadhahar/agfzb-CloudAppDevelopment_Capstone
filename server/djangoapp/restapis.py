@@ -82,15 +82,15 @@ def get_dealers_from_cf(url, **kwargs):
             dealer_doc = dealer["doc"]
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
-                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                   dealer_id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
                                    short_name=dealer_doc["short_name"],
                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
             results.append(dealer_obj)
 
     return results
 
-def get_dealer_by_id_from_cf(url, id):
-    json_result=get_request(url, id=id)
+def get_dealer_by_id_from_cf(url, dealer_id):
+    json_result=get_request(url, dealer_id=dealer_id)
     print("JSON: ", json_result)
     if json_result:
         dealer = json_result[0]
@@ -98,7 +98,7 @@ def get_dealer_by_id_from_cf(url, id):
             address=dealer["address"], 
             city=dealer["city"], 
             full_name=dealer["full_name"], 
-            id=dealer["id"], 
+            dealer_id=dealer["id"], 
             lat=dealer["lat"], 
             long=dealer["long"], 
             short_name=dealer["short_name"], 
@@ -116,9 +116,9 @@ def get_dealer_by_id_from_cf(url, id):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
 
-def get_dealer_reviews_from_cf(url, id):
+def get_dealer_reviews_from_cf(url, dealer_id):
     results = []
-    json_result=get_request(url, id=id)
+    json_result=get_request(url, dealer_id=dealer_id)
     print(json_result) 
     if json_result:
         reviews = json_result["data"]["docs"]
