@@ -107,15 +107,15 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealer_details(request, dealer_id):
+def get_dealer_details(request, id):
     if request.method == "GET":
         dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id=dealer_id)
-        print("DEALER: ", dealer.address)
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
+        print("DEALER_ADD: ", dealer.id)
         
 
         reviews_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-review"
-        reviews_list = get_dealer_reviews_from_cf(reviews_url, dealer_id=dealer_id)
+        reviews_list = get_dealer_reviews_from_cf(reviews_url, id=id)
         context = {}
         context['dealer'] = dealer
         context['reviews_list'] = reviews_list
@@ -127,11 +127,11 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 # ...
 
-def add_review(request, dealer_id):
+def add_review(request, id):
     if request.method == 'GET':
         context = {}
         dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id=dealer_id)
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context['dealer'] = dealer
 
         cars = CarModel.objects.all()
@@ -163,8 +163,8 @@ def add_review(request, dealer_id):
             payload = {}
             payload['review'] = user_review
             review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/post-review"
-            post_request(review_post_url, payload, dealer_id=dealer_id)
-            return redirect('djangoapp:dealer_details', dealer_id=dealer_id )
+            post_request(review_post_url, payload, id=id)
+            return redirect('djangoapp:dealer_details', id=id)
 
 
 
