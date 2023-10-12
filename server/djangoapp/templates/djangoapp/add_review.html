@@ -15,7 +15,7 @@
             <h3>Add Review for <strong> {{dealer.full_name}} </strong> </h3>
         </div>
 
-        <form class="d-flex flex-row justify-content-end" action="{% url 'djangoapp: add_review' dealerId %}" method="post">
+        <form class="d-flex flex-row justify-content-end" action="{% url 'djangoapp: add_review' dealer.id %}" method="post">
             {% csrf_token %}
             <div class="col-auto">
                 <h5>Enter your text here:</h5>

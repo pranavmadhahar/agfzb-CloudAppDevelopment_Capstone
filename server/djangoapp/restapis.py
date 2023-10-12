@@ -104,8 +104,8 @@ def get_dealer_by_id_from_cf(url, id):
             short_name=dealer["short_name"], 
             st=dealer["st"], 
             zip=dealer["zip"])
-        return dealer_obj
         print("D_OBJ :", dealer_obj)
+        return dealer_obj
     else:
         print('Some error occurred')  
                                   

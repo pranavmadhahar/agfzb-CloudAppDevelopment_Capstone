@@ -128,12 +128,13 @@ def get_dealer_details(request, id):
 # ...
 
 def add_review(request, id):
-    if request.method == 'GET':
-        context = {}
-        dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
-        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
-        context['dealer'] = dealer
+    
+    context = {}
+    dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
+    context['dealer'] = dealer
 
+    if request.method == 'GET':
         cars = CarModel.objects.all()
         print("CARS: ", cars)
         context['cars'] = cars
