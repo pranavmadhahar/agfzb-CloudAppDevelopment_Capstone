@@ -89,22 +89,22 @@ def get_dealers_from_cf(url, **kwargs):
 
     return results
 
+
 def get_dealer_by_id_from_cf(url, id):
     json_result=get_request(url, id=id)
     print("JSON: ", json_result)
     if json_result:
-        dealer = json_result[0]
+        dealer_doc = json_result[0]
         dealer_obj = CarDealer(
-            address=dealer["address"], 
-            city=dealer["city"], 
-            full_name=dealer["full_name"], 
-            id=dealer["id"], 
-            lat=dealer["lat"], 
-            long=dealer["long"], 
-            short_name=dealer["short_name"], 
-            st=dealer["st"], 
-            zip=dealer["zip"])
-        print("D_OBJ :", dealer_obj)
+            address=dealer_doc["address"], 
+            city=dealer_doc["city"], 
+            full_name=dealer_doc["full_name"], 
+            id=dealer_doc["id"], 
+            lat=dealer_doc["lat"], 
+            long=dealer_doc["long"], 
+            short_name=dealer_doc["short_name"], 
+            st=dealer_doc["st"], 
+            zip=dealer_doc["zip"])
         return dealer_obj
     else:
         print('Some error occurred')  

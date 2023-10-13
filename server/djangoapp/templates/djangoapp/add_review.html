@@ -12,27 +12,29 @@
 </head>
     <body>
         <div class="col-md">
-            <h3>Add Review for <strong> {{dealer.full_name}} </strong> </h3>
+            <h3 class="mb-5">Add Review for <strong> {{dealer.full_name}} </strong> </h3>
         </div>
 
-        <form class="d-flex flex-row justify-content-end" action="{% url 'djangoapp: add_review' dealer.id %}" method="post">
+        <form class="d-flex flex-column justify-content-center w-50" action="/djangoapp/dealer/{{dealer.id}}/add_review" method="post">
             {% csrf_token %}
             <div class="col-auto">
                 <h5>Enter your text here:</h5>
-                <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
-                <label>Have you purchased car from {{dealer.full_name}}?</lablel>
-                <input type="checkbox" class="form-check-input" name="purchasecheck" idr="purchasecheck" >
-                <h5>Select your car (Model-Make-Year):</h5>
-                <select name="car" id="car" class="form-select" required>
+                <textarea class="form-control my-2" id="content" name="content" rows="2" required></textarea>
+                <div class="d-flex flex-row"> 
+                    <label class="mx-2">Have you purchased car from {{dealer.full_name}}?</lablel>
+                    <input type="checkbox" class="form-check-input" name="purchasecheck" id="purchasecheck" >
+                </div>
+                <h5 class="my-2">Select your car (Model-Make-Year):</h5>
+                <select name="car" id="car" class="form-select my-2 mx-2" required>
                     {% for car in cars %}
                         <option selected value={{car.id}}>{{car.name}}-{{car.make}}-{{ car.year|date:"Y" }}</option>
                     {% endfor %}
                </select>
-               <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+               <input class="date-own form-control my-2" type="text" name="purchasedate" id="purchasedate">
+               <button type="submit" class="btn btn-primary my-3 align-items-center">Submit Review</button>
+            
             </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-3">Submit Review</button>
-            </div>
+        
         </form>
     
     </body>

@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import CarModel
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
+from .models import CarModel, CarMake, CarDealer, DealerReview
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -112,7 +112,6 @@ def get_dealer_details(request, id):
         dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         print("DEALER_ADD: ", dealer.id)
-        
 
         reviews_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-review"
         reviews_list = get_dealer_reviews_from_cf(reviews_url, id=id)
@@ -121,14 +120,8 @@ def get_dealer_details(request, id):
         context['reviews_list'] = reviews_list
         return render(request, 'djangoapp/dealer_details.html', context)
         
-# ...
-
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
-
 def add_review(request, id):
-    
     context = {}
     dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/get-dealership"
     dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
@@ -143,12 +136,13 @@ def add_review(request, id):
 
     elif request.method == 'POST':
         if request.user.is_authenticated:
+            username = request.user.username
             print(request.POST)
             car = CarModel.objects.filter(pk=request.POST['car'])
             user_review = {}
             user_review["time"] = datetime.utcnow().isoformat()
             user_review["name"] = username
-            user_review["dealership"] = dealer_id
+            user_review["dealership"] = id
             user_review['id'] = car.id
             user_review['review'] = request.POST['content']
             user_review['purchase'] = False
@@ -159,15 +153,11 @@ def add_review(request, id):
                     user_review['purchase_date'] = request.POST['purchasedate']
                     user_review['car_make'] = car.make
                     user_review['car_model'] = car.name
-                    user_review['car_year'] = car.year
+                    user_review['car_year'] = int(car.year.strftime("%Y"))
             
             payload = {}
             payload['review'] = user_review
             review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/1d24272f-6771-49cf-9a2e-9c5f72c0702e/default/post-review"
             post_request(review_post_url, payload, id=id)
-            return redirect('djangoapp:dealer_details', id=id)
-
-
-
-
+        return redirect('djangoapp:dealer_details', id=id)
 
