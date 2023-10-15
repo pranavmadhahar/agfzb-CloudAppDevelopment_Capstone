@@ -138,12 +138,14 @@ def add_review(request, id):
         if request.user.is_authenticated:
             username = request.user.username
             print(request.POST)
-            car = CarModel.objects.filter(pk=request.POST['car'])
+            car_id = request.POST["car"]
+            car = CarModel.objects.get(pk=car_id)
+            print("CAR: ",car)
             user_review = {}
             user_review["time"] = datetime.utcnow().isoformat()
             user_review["name"] = username
             user_review["dealership"] = id
-            user_review['id'] = car.id
+            user_review["id"] = id
             user_review['review'] = request.POST['content']
             user_review['purchase'] = False
 
@@ -151,7 +153,7 @@ def add_review(request, id):
                 if request.POST['purchasecheck'] == 'on':
                     user_review['purchase'] = True
                     user_review['purchase_date'] = request.POST['purchasedate']
-                    user_review['car_make'] = car.make
+                    user_review['car_make'] = car.make.name
                     user_review['car_model'] = car.name
                     user_review['car_year'] = int(car.year.strftime("%Y"))
             

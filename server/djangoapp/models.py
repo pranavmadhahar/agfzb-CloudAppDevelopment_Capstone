@@ -49,7 +49,7 @@ class CarModel(models.Model):
     year = models.DateField(default=now)
 
     def __str__(self):
-        return "Name: " + self.name             
+        return "Name: " + self.name + " " + "Make: "+ str(self.make)
                
                
 
